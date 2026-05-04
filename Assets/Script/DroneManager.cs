@@ -37,29 +37,71 @@ public class Drone : MonoBehaviour
 
         // May make these global variables:
         XRHandJoint palm = Lefthand.GetJoint(XRHandJointID.Palm);
-        XRHandJoint thumb = leftHand.GetJoint(XRHandJointID.ThumbTip);
-        XRHandJoint index = leftHand.GetJoint(XRHandJointID.IndexTip);
-        XRHandJoint middle = leftHand.GetJoint(XRHandJointID.MiddleTip);
-        XRHandJoint ring = leftHand.GetJoint(XRHandJointID.RingTip);
-        XRHandJoint pinky = leftHand.GetJoint(XRHandJointID.LittleTip);
+        XRHandJoint thumb = Lefthand.GetJoint(XRHandJointID.ThumbTip);
+        XRHandJoint index = Lefthand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint middle = Lefthand.GetJoint(XRHandJointID.MiddleTip);
+        XRHandJoint ring = Lefthand.GetJoint(XRHandJointID.RingTip);
+        XRHandJoint pinky = Lefthand.GetJoint(XRHandJointID.LittleTip);
 
-        float thumbToPalm = Vector3.Distance(thumb.pose.position, palm.pose.position);
-        float indexToPalm = Vector3.Distance(index.pose.position, palm.pose.position);
-        float middleToPalm = Vector3.Distance(middle.pose.position, palm.pose.position);
-        float ringToPalm = Vector3.Distance(ring.pose.position, palm.pose.position);
-        float pinkyToPalm = Vector3.Distance(ring.pose.position, palm.pose.position);
 
-        if (palm.TryGetPose(out Pose palmPose) &&
-            thumbToPalm < 0.1f &&
-            indexToPalm < 0.05f &&
-            middleToPalm < 0.05f &&
-            ringToPalm < 0.05f && 
-            pinkyToPalm < 0.05f 
-            )
+        float thumbToPalm = 0;
+        float indexToPalm = 0;
+        float middleToPalm = 0;
+        float ringToPalm = 0;
+        float pinkyToPalm = 0;
+
+
+
+
+        if (palm.TryGetPose(out Pose palmPose)) {
+
+
+            if (thumb.TryGetPose(out Pose thumbPose)) {
+
+                thumbToPalm = Vector3.Distance(thumbPose.position, palmPose.position);
+
+            }
+
+            if (index.TryGetPose(out Pose indexPose)) {
+
+                indexToPalm = Vector3.Distance(indexPose.position, palmPose.position);
+
+            }
+
+            if (middle.TryGetPose(out Pose middlePose))
+            {
+
+                middleToPalm = Vector3.Distance(middlePose.position, palmPose.position);
+
+            }
+
+            if (ring.TryGetPose(out Pose ringPose))
+            {
+
+                ringToPalm = Vector3.Distance(ringPose.position, palmPose.position);
+
+            }
+
+            if (pinky.TryGetPose(out Pose pinkyPose))
+            {
+
+                pinkyToPalm = Vector3.Distance(pinkyPose.position, palmPose.position);
+
+            }
+
+        }
+
+        if (thumbToPalm < 0.1f &&
+              indexToPalm < 0.05f &&
+              middleToPalm < 0.05f &&
+              ringToPalm < 0.05f &&
+              pinkyToPalm < 0.05f
+              )
         {
             Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
             MoveDrone();
         }
+
 
     }
 
