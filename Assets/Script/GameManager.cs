@@ -8,16 +8,21 @@ public class GameManager : MonoBehaviour
 {
     public TextAsset file;
 
+    [SerializeField]
+    private GameObject checkpointPrefab;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        CreateCheckPoints(ParseFile());
+        List<Vector3> positions = ParseFile();
+        CreateCheckPoints(positions);
+        SetStartPos(positions);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //given code for parsing the input file
@@ -41,7 +46,20 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < positions.Count; i++)
         {
-            //GameObject checkpoint = Instantiate(checkpointPrefab, positions[i], Quaternion.identity)
+
+            GameObject checkpoint = Instantiate(checkpointPrefab, positions[i], Quaternion.identity);
         }
+    }
+
+    void SetStartPos(List<Vector3> positions)
+    {
+        transform.position = positions[0];
+        if (positions.Count < 2)
+        {
+            return;
+        }
+        Vector3 directionToNext = positions[1] - positions[0];
+        transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
+
     }
 }
