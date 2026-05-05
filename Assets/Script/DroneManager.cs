@@ -197,7 +197,8 @@ public class Drone : MonoBehaviour
             RightIndexBase.TryGetPose(out Pose RightIndexBasePose))
         {
             Vector3 newDirection = (RightIndexTipPose.position - RightIndexBasePose.position).normalized;
-            transform.rotation = Quaternion.LookRotation(newDirection);
+            Vector3 bodyRelativeDirection = xrOrigin.transform.InverseTransformDirection(newDirection);
+            transform.rotation = Quaternion.LookRotation(bodyRelativeDirection);
 
         }
 
