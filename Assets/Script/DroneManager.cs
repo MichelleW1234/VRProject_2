@@ -222,8 +222,10 @@ public class Drone : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void HandleCollision(Collider other)
     {
-        Debug.Log("DRONE COLLIDED WITH ", other);
+        Debug.Log("DRONE COLLIDED WITH " + other.gameObject.name);
+
+        // reset drone here
     }
 }
