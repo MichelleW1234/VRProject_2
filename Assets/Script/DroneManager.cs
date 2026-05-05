@@ -106,7 +106,7 @@ public class Drone : MonoBehaviour
         XRHand Righthand = handSubsystem.rightHand;
         if (Righthand.isTracked)
         {
-            Debug.Log("WE GOT THE LEFT HAND WORKING!!!!!!!!!!");
+            Debug.Log("WE GOT THE RIGHT HAND WORKING!!!!!!!!!!");
         }
 
         // May make these global variables:
@@ -163,13 +163,13 @@ public class Drone : MonoBehaviour
         }
 
         if (RightThumbToPalm < 0.1f &&
-            RightIndexToPalm > 1f &&
+            RightIndexToPalm > 0.1f &&
             RightMiddleToPalm < 0.05f &&
             RightRingToPalm < 0.05f &&
             RightPinkyToPalm < 0.05f
             )
         {
-            Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
+            Debug.Log("WE GOT THE POINTING POSE WORKING!!!!!!!!!!");
             DirectDrone();
         }
 
@@ -196,10 +196,28 @@ public class Drone : MonoBehaviour
         if (RightIndexTip.TryGetPose(out Pose RightIndexTipPose) &&
             RightIndexBase.TryGetPose(out Pose RightIndexBasePose))
         {
-            Vector3 newDirection = (RightIndexTipPose.position - RightIndexBasePose.position).normalized;
-            Vector3 bodyRelativeDirection = transform.InverseTransformDirection(newDirection);
-            transform.rotation = Quaternion.LookRotation(bodyRelativeDirection);
+            //gets finger direction
+            Vector3 fingerDirection =  (RightIndexTipPose.position - RightIndexBasePose.position).normalized;
 
+
+            float yawInput = fingerDirection.x; //left, right direction goes here
+            float pitchInput = -fingerDirection.y; //up,down direction goes here
+
+            float yawSpeed = 90f; //horizontal turning speed 
+            float pitchSpeed = 60f; //vertical turning speed 
+
+            transform.Rotate(
+                Vector3.up,
+                yawInput * yawSpeed * Time.deltaTime,
+                Space.World
+            );
+            
+            transform.Rotate(
+                Vector3.right,
+                pitchInput * pitchSpeed * Time.deltaTime,
+                Space.Self
+            );
+       
         }
 
     }
