@@ -36,71 +36,145 @@ public class Drone : MonoBehaviour
         }
 
         // May make these global variables:
-        XRHandJoint palm = Lefthand.GetJoint(XRHandJointID.Palm);
-        XRHandJoint thumb = Lefthand.GetJoint(XRHandJointID.ThumbTip);
-        XRHandJoint index = Lefthand.GetJoint(XRHandJointID.IndexTip);
-        XRHandJoint middle = Lefthand.GetJoint(XRHandJointID.MiddleTip);
-        XRHandJoint ring = Lefthand.GetJoint(XRHandJointID.RingTip);
-        XRHandJoint pinky = Lefthand.GetJoint(XRHandJointID.LittleTip);
+        XRHandJoint LeftPalm = Lefthand.GetJoint(XRHandJointID.Palm);
+        XRHandJoint LeftThumb = Lefthand.GetJoint(XRHandJointID.ThumbTip);
+        XRHandJoint LeftIndex = Lefthand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint LeftMiddle = Lefthand.GetJoint(XRHandJointID.MiddleTip);
+        XRHandJoint LeftRing = Lefthand.GetJoint(XRHandJointID.RingTip);
+        XRHandJoint LeftPinky = Lefthand.GetJoint(XRHandJointID.LittleTip);
 
 
-        float thumbToPalm = 0;
-        float indexToPalm = 0;
-        float middleToPalm = 0;
-        float ringToPalm = 0;
-        float pinkyToPalm = 0;
+        float LeftThumbToPalm = Mathf.Infinity;
+        float LeftIndexToPalm = Mathf.Infinity;
+        float LeftMiddleToPalm = Mathf.Infinity;
+        float LeftRingToPalm = Mathf.Infinity;
+        float LeftPinkyToPalm = Mathf.Infinity;
+
+        if (LeftPalm.TryGetPose(out Pose LeftPalmPose)) {
 
 
+            if (LeftThumb.TryGetPose(out Pose LeftThumbPose)) {
 
-
-        if (palm.TryGetPose(out Pose palmPose)) {
-
-
-            if (thumb.TryGetPose(out Pose thumbPose)) {
-
-                thumbToPalm = Vector3.Distance(thumbPose.position, palmPose.position);
+                LeftThumbToPalm = Vector3.Distance(LeftThumbPose.position, LeftPalmPose.position);
 
             }
 
-            if (index.TryGetPose(out Pose indexPose)) {
+            if (LeftIndex.TryGetPose(out Pose LeftIndexPose)) {
 
-                indexToPalm = Vector3.Distance(indexPose.position, palmPose.position);
+                LeftIndexToPalm = Vector3.Distance(LeftIndexPose.position, LeftPalmPose.position);
 
             }
 
-            if (middle.TryGetPose(out Pose middlePose))
+            if (LeftMiddle.TryGetPose(out Pose LeftMiddlePose))
             {
 
-                middleToPalm = Vector3.Distance(middlePose.position, palmPose.position);
+                LeftMiddleToPalm = Vector3.Distance(LeftMiddlePose.position, LeftPalmPose.position);
 
             }
 
-            if (ring.TryGetPose(out Pose ringPose))
+            if (LeftRing.TryGetPose(out Pose LeftRingPose))
             {
 
-                ringToPalm = Vector3.Distance(ringPose.position, palmPose.position);
+                LeftRingToPalm = Vector3.Distance(LeftRingPose.position, LeftPalmPose.position);
 
             }
 
-            if (pinky.TryGetPose(out Pose pinkyPose))
+            if (LeftPinky.TryGetPose(out Pose LeftPinkyPose))
             {
 
-                pinkyToPalm = Vector3.Distance(pinkyPose.position, palmPose.position);
+                LeftPinkyToPalm = Vector3.Distance(LeftPinkyPose.position, LeftPalmPose.position);
 
             }
 
         }
 
-        if (thumbToPalm < 0.1f &&
-              indexToPalm < 0.05f &&
-              middleToPalm < 0.05f &&
-              ringToPalm < 0.05f &&
-              pinkyToPalm < 0.05f
-              )
+        if (LeftThumbToPalm < 0.1f &&
+            LeftIndexToPalm < 0.05f &&
+            LeftMiddleToPalm < 0.05f &&
+            LeftRingToPalm < 0.05f &&
+            LeftPinkyToPalm < 0.05f
+            )
         {
             Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
             MoveDrone();
         }
+
+
+
+        //Right hand:
+
+        XRHand Righthand = handSubsystem.rightHand;
+        if (RightHand.isTracked)
+        {
+            Debug.Log("WE GOT THE LEFT HAND WORKING!!!!!!!!!!");
+        }
+
+        // May make these global variables:
+        XRHandJoint RightPalm = RightHand.GetJoint(XRHandJointID.Palm);
+        XRHandJoint RightThumb = RightHand.GetJoint(XRHandJointID.ThumbTip);
+        XRHandJoint RightIndex = RightHand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint RightMiddle = RightHand.GetJoint(XRHandJointID.MiddleTip);
+        XRHandJoint RightRing = RightHand.GetJoint(XRHandJointID.RingTip);
+        XRHandJoint RightPinky = RightHand.GetJoint(XRHandJointID.LittleTip);
+
+
+        float RightThumbToPalm = Mathf.Infinity;
+        float RightIndexToPalm = Mathf.Infinity;
+        float RightMiddleToPalm = Mathf.Infinity;
+        float RightRingToPalm = Mathf.Infinity;
+        float RightPinkyToPalm = Mathf.Infinity;
+
+        if (RightPalm.TryGetPose(out Pose RightPalmPose)) {
+
+
+            if (RightThumb.TryGetPose(out Pose RightThumbPose)) {
+
+                RightThumbToPalm = Vector3.Distance(RightThumbPose.position, RightPalmPose.position);
+
+            }
+
+            if (RightIndex.TryGetPose(out Pose RightIndexPose)) {
+
+                RightIndexToPalm = Vector3.Distance(RightIndexPose.position, RightPalmPose.position);
+
+            }
+
+            if (RightMiddle.TryGetPose(out Pose RightMiddlePose))
+            {
+
+                RightMiddleToPalm = Vector3.Distance(RightMiddlePose.position, RightPalmPose.position);
+
+            }
+
+            if (RightRing.TryGetPose(out Pose RightRingPose))
+            {
+
+                RightRingToPalm = Vector3.Distance(RightRingPose.position, RightPalmPose.position);
+
+            }
+
+            if (RightPinky.TryGetPose(out Pose RightPinkyPose))
+            {
+
+                RightPinkyToPalm = Vector3.Distance(RightPinkyPose.position, RightPalmPose.position);
+
+            }
+
+        }
+
+        if (RightThumbToPalm < 0.1f &&
+            RightIndexToPalm > 1f &&
+            RightMiddleToPalm < 0.05f &&
+            RightRingToPalm < 0.05f &&
+            RightPinkyToPalm < 0.05f
+            )
+        {
+            Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
+            DirectDrone();
+        }
+
+
+
 
 
     }
@@ -113,9 +187,19 @@ public class Drone : MonoBehaviour
 
     }
 
-    private void RotateDrone()
+    private void DirectDrone()
     {
         
+        XRHandJoint RightIndex = RightHand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint RightIndexBase = leftHand.GetJoint(XRHandJointID.IndexProximal);
+
+        if (RightIndexTip.TryGetPose(out Pose RightIndexTipPose) &&
+            RightIndexBase.TryGetPose(out Pose RightIndexBasePose))
+        {
+            Vector3 newDirection = (RightIndexTipPose.position - RightIndexBasePose.position).normalized;
+            transform.rotation = Quaternion.LookRotation(newDirection);
+
+        }
 
     }
 
