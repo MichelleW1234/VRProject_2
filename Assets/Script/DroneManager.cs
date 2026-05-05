@@ -104,18 +104,18 @@ public class Drone : MonoBehaviour
         //Right hand:
 
         XRHand Righthand = handSubsystem.rightHand;
-        if (RightHand.isTracked)
+        if (Righthand.isTracked)
         {
             Debug.Log("WE GOT THE LEFT HAND WORKING!!!!!!!!!!");
         }
 
         // May make these global variables:
-        XRHandJoint RightPalm = RightHand.GetJoint(XRHandJointID.Palm);
-        XRHandJoint RightThumb = RightHand.GetJoint(XRHandJointID.ThumbTip);
-        XRHandJoint RightIndex = RightHand.GetJoint(XRHandJointID.IndexTip);
-        XRHandJoint RightMiddle = RightHand.GetJoint(XRHandJointID.MiddleTip);
-        XRHandJoint RightRing = RightHand.GetJoint(XRHandJointID.RingTip);
-        XRHandJoint RightPinky = RightHand.GetJoint(XRHandJointID.LittleTip);
+        XRHandJoint RightPalm = Righthand.GetJoint(XRHandJointID.Palm);
+        XRHandJoint RightThumb = Righthand.GetJoint(XRHandJointID.ThumbTip);
+        XRHandJoint RightIndex = Righthand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint RightMiddle = Righthand.GetJoint(XRHandJointID.MiddleTip);
+        XRHandJoint RightRing = Righthand.GetJoint(XRHandJointID.RingTip);
+        XRHandJoint RightPinky = Righthand.GetJoint(XRHandJointID.LittleTip);
 
 
         float RightThumbToPalm = Mathf.Infinity;
@@ -189,10 +189,10 @@ public class Drone : MonoBehaviour
 
     private void DirectDrone()
     {
-        
-        XRHandJoint RightIndex = RightHand.GetJoint(XRHandJointID.IndexTip);
-        XRHandJoint RightIndexBase = leftHand.GetJoint(XRHandJointID.IndexProximal);
-
+        XRHand Righthand = handSubsystem.rightHand;
+        XRHandJoint RightIndexTip = Righthand.GetJoint(XRHandJointID.IndexTip);
+        XRHandJoint RightIndexBase = Righthand.GetJoint(XRHandJointID.IndexProximal);
+ 
         if (RightIndexTip.TryGetPose(out Pose RightIndexTipPose) &&
             RightIndexBase.TryGetPose(out Pose RightIndexBasePose))
         {
