@@ -26,6 +26,7 @@ public class Drone : MonoBehaviour
 
         GM = gameObject.GetComponent<GameManager>();
 
+        line.material = new Material(Shader.Find("Sprites/Default"));
         UpdateRay();
 
     }
@@ -201,8 +202,6 @@ public class Drone : MonoBehaviour
 
             Debug.Log("done!"); 
         }
-
-        line.material = new Material(Shader.Find("Sprites/Default"));
 
     }
 
