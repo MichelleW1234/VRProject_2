@@ -1,5 +1,7 @@
 using Meta.XR.MRUtilityKit;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -10,13 +12,19 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject checkpointPrefab;
+    private List<Vector3> positions;
+    public int checkpoints_reached = 0;
+    private int total_checkpoint;
+    public CheckPoint currentCP; //stores the last checkpoint reached 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        List<Vector3> positions = ParseFile();
+        positions = ParseFile();
         CreateCheckPoints(positions);
         SetStartPos(positions);
+        total_checkpoint = positions.Count;
+        checkpoints_reached = 1;
     }
 
     // Update is called once per frame
@@ -48,6 +56,23 @@ public class GameManager : MonoBehaviour
         {
 
             GameObject checkpoint = Instantiate(checkpointPrefab, positions[i], Quaternion.identity);
+            checkpoint.name = "Checkpoint_" + i; //name the checkpoints with index number
+
+            CheckPoint script = checkpoint.GetComponent<CheckPoint>(); //get script of new checkpoint
+            if (script != null)
+            {
+                //set the checkpoint script values for later use
+                script.checkpointIndex = i; 
+                script.checkpointPosition = positions[i];
+
+                //sets checkpoint 0 (starting point) initially
+                if (i == 0)
+                {
+                    currentCP = script;
+                }
+
+
+            }
         }
     }
 
@@ -62,4 +87,63 @@ public class GameManager : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
 
     }
+
+    //called from DroneManage when Drone collider collides with the MAP
+    public void ResetDrone()
+    {
+        StartCoroutine(ResetDroneRoutine());
+    }
+
+    private IEnumerator ResetDroneRoutine()
+    {
+        // reset drone here
+        if (currentCP != null)
+        {
+            //sets position to last checkpoint and rotation to the next checkpoint
+            transform.position = currentCP.checkpointPosition;
+            //did not check currentCP.checkpointIndex + 1 gets out of size because if we reached all checkpoints
+            //game should have stopped not make drone reset
+            Vector3 directionToNext = positions[currentCP.checkpointIndex + 1]
+                - positions[currentCP.checkpointIndex];
+            transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
+        }
+
+
+        // pause everything affected by Time.deltaTime / physics
+        Time.timeScale = 0f;
+
+        Debug.Log("Paused for 3 seconds");
+
+        // wait 3 real-world seconds
+        yield return new WaitForSecondsRealtime(3f);
+
+
+
+
+        // resume
+        Time.timeScale = 1f;
+
+        Debug.Log("Game resumed");
+    }
+
+    //called from DroneManager when Drone collider collides with checkpoint
+    public void CheckPointReached(Collider other)
+    {
+        if (other == null) return; //safety
+
+        if (other.CompareTag("CP")) {
+            currentCP = other.GetComponent<CheckPoint>(); //updates last checkpoint
+
+            //if this checkpoint is the valid next checkpoint
+            if (currentCP != null && currentCP.checkpointIndex == checkpoints_reached)
+            {
+                checkpoints_reached++; //increment the checkpoint count
+            }
+            else
+            {
+                Debug.Log("NOT THE NEXT CHECKPOINT");
+            }
+        }
+    }
+
 }
