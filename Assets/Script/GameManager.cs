@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject checkpointPrefab;
-    private List<Vector3> positions;
+    public List<Vector3> positions;
     public int checkpoints_reached = 0;
     private int total_checkpoint;
     public CheckPoint currentCP; //stores the last checkpoint reached 

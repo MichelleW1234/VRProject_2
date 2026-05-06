@@ -190,7 +190,7 @@ public class Drone : MonoBehaviour
 
     private void UpdateRay()
     {
-        Vector3 rayDirectionEndpoint = GM.positions[GM.checkpoints_reached + 1];
+        Vector3 rayDirectionEndpoint = GM.positions[GM.checkpoints_reached];
         Ray ray = new Ray(transform.position, (rayDirectionEndpoint - transform.position).normalized);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
