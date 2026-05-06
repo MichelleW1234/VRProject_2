@@ -8,8 +8,8 @@ public class Drone : MonoBehaviour
 {
 
     XRHandSubsystem handSubsystem;
-    float defaultSpeed = 5f;
-
+    private float defaultSpeed = 5f;
+    private GameManager GM;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,6 +22,8 @@ public class Drone : MonoBehaviour
         {
             handSubsystem = subsystems[0];
         }
+
+        GM = gameObject.GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -32,7 +34,7 @@ public class Drone : MonoBehaviour
         XRHand Lefthand = handSubsystem.leftHand;
         if (Lefthand.isTracked)
         {
-            Debug.Log("WE GOT THE LEFT HAND WORKING!!!!!!!!!!");
+            //Debug.Log("WE GOT THE LEFT HAND WORKING!!!!!!!!!!");
         }
 
         // May make these global variables:
@@ -95,7 +97,7 @@ public class Drone : MonoBehaviour
             LeftPinkyToPalm < 0.05f
             )
         {
-            Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
+            //Debug.Log("WE GOT THE PALM POSE WORKING!!!!!!!!!!");
             MoveDrone();
         }
 
@@ -106,7 +108,7 @@ public class Drone : MonoBehaviour
         XRHand Righthand = handSubsystem.rightHand;
         if (Righthand.isTracked)
         {
-            Debug.Log("WE GOT THE RIGHT HAND WORKING!!!!!!!!!!");
+            //Debug.Log("WE GOT THE RIGHT HAND WORKING!!!!!!!!!!");
         }
 
         // May make these global variables:
@@ -169,7 +171,7 @@ public class Drone : MonoBehaviour
             RightPinkyToPalm < 0.05f
             )
         {
-            Debug.Log("WE GOT THE POINTING POSE WORKING!!!!!!!!!!");
+            //Debug.Log("WE GOT THE POINTING POSE WORKING!!!!!!!!!!");
             DirectDrone();
         }
 
@@ -224,8 +226,22 @@ public class Drone : MonoBehaviour
 
     public void HandleCollision(Collider other)
     {
-        Debug.Log("DRONE COLLIDED WITH " + other.gameObject.name);
 
         // reset drone here
+        if (other.CompareTag("MAP"))
+        {
+            //Debug.Log("DRONE COLLIDED WITH MAP");
+            // reset drone here
+            GM.ResetDrone();
+        }
+        else if (other.CompareTag("CP"))
+        {
+            //Debug.Log("DRONE COLLIDED WITH CHECKPOINT");
+            GM.CheckPointReached(other);
+        }
+        else
+        {
+            Debug.Log("Drone collided with unknown object: " + other.gameObject.name);
+        }
     }
 }
