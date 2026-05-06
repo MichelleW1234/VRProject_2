@@ -117,9 +117,6 @@ public class GameManager : MonoBehaviour
         // wait 3 real-world seconds
         yield return new WaitForSecondsRealtime(3f);
 
-
-
-
         // resume
         Time.timeScale = 1f;
 
