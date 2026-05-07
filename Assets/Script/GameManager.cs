@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public int checkpoints_reached = 0;
     private int total_checkpoint;
     public CheckPoint currentCP; //stores the last checkpoint reached 
+
+    private bool IsResetting = false;
     
     [SerializeField]
     private UI UIS;
@@ -25,7 +27,9 @@ public class GameManager : MonoBehaviour
         CreateCheckPoints(positions);
         SetStartPos(positions);
         total_checkpoint = positions.Count;
+        UIS.SetTotalCheckPoint(total_checkpoint);
         checkpoints_reached = 1;
+        UIS.UpdateCheckPoint(checkpoints_reached);
 
         if (UIS == null) Debug.Log("UI script not assigned");
     }
@@ -92,11 +96,13 @@ public class GameManager : MonoBehaviour
     //called from DroneManage when Drone collider collides with the MAP
     public void ResetDrone()
     {
+        if (IsResetting) return;
         StartCoroutine(ResetDroneRoutine());
     }
 
     private IEnumerator ResetDroneRoutine()
     {
+        IsResetting = true;
         // reset drone here
         if (currentCP != null)
         {
@@ -109,7 +115,8 @@ public class GameManager : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
         }
 
-
+        yield return StartCoroutine(UIS.StartCountdown());
+        /**
         // pause everything affected by Time.deltaTime / physics
         Time.timeScale = 0f;
 
@@ -120,14 +127,16 @@ public class GameManager : MonoBehaviour
 
         // resume
         Time.timeScale = 1f;
-
+        */
         Debug.Log("Game resumed");
+        IsResetting = false;
     }
 
     //called from DroneManager when Drone collider collides with checkpoint
     public void CheckPointReached(Collider other)
     {
         if (other == null) return; //safety
+        if (IsResetting) return;
 
         if (other.CompareTag("CP")) {
             CheckPoint CPtoCheck = other.GetComponent<CheckPoint>(); //updates last checkpoint

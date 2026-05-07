@@ -8,9 +8,11 @@ public class DroneManager : MonoBehaviour
 {
 
     XRHandSubsystem handSubsystem;
-    private float defaultSpeed = 5f;
+    [SerializeField]
+    private float defaultSpeed = 20f;
     public GameManager GM;
-
+    private Rigidbody rb;
+    private bool ShouldMove = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,13 +26,19 @@ public class DroneManager : MonoBehaviour
         }
 
         GM = gameObject.GetComponent<GameManager>();
+        rb = gameObject.GetComponent<Rigidbody>();
+        if (rb == null) Debug.Log("RB NULL");
+
+    }
+
+    private void FixedUpdate()
+    {
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if (handSubsystem == null) return; //safety check
 
         XRHand Lefthand = handSubsystem.leftHand;
@@ -105,9 +113,9 @@ public class DroneManager : MonoBehaviour
 
 
 
-        //Right hand:
+            //Right hand:
 
-        XRHand Righthand = handSubsystem.rightHand;
+            XRHand Righthand = handSubsystem.rightHand;
         if (Righthand.isTracked)
         {
             //Debug.Log("WE GOT THE RIGHT HAND WORKING!!!!!!!!!!");
@@ -170,7 +178,7 @@ public class DroneManager : MonoBehaviour
             RightIndexToPalm > 0.1f &&
             RightMiddleToPalm < 0.05f &&
             RightRingToPalm < 0.05f &&
-            RightPinkyToPalm < 0.05f
+            RightPinkyToPalm < 0.05f && Time.timeScale > 0f
             )
         {
             //Debug.Log("WE GOT THE POINTING POSE WORKING!!!!!!!!!!");
@@ -186,8 +194,12 @@ public class DroneManager : MonoBehaviour
 
     private void MoveDrone()
     {
-        
-        transform.position += transform.forward * defaultSpeed * Time.deltaTime;
+        if (Time.timeScale > 0f)
+        {
+            Vector3 newPosition = rb.position + transform.forward * defaultSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(newPosition);
+        }
+        //transform.position += transform.forward * defaultSpeed * Time.deltaTime;
 
     }
 
@@ -224,26 +236,5 @@ public class DroneManager : MonoBehaviour
        
         }
 
-    }
-
-    public void HandleCollision(Collider other)
-    {
-
-        // reset drone here
-        if (other.CompareTag("MAP"))
-        {
-            //Debug.Log("DRONE COLLIDED WITH MAP");
-            // reset drone here
-            GM.ResetDrone();
-        }
-        else if (other.CompareTag("CP"))
-        {
-            //Debug.Log("DRONE COLLIDED WITH CHECKPOINT");
-            GM.CheckPointReached(other);
-        }
-        else
-        {
-            Debug.Log("Drone collided with unknown object: " + other.gameObject.name);
-        }
     }
 }

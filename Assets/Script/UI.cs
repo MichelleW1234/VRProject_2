@@ -8,7 +8,7 @@ public class UI : MonoBehaviour
 {
 
     [SerializeField]
-    private TMP_Text timer_text, countdown_text, checkpoint_reached;
+    private TMP_Text timer_text, countdown_text, checkpoint_reached, total_checkpoints;
 
     private bool timerActive; //to see if timer would be runned
     private float currentTime;
@@ -18,7 +18,7 @@ public class UI : MonoBehaviour
     {
         currentTime = 0f;
         timerActive = false;
-        StartCoroutine(StartCountdown());
+        StartCoroutine(StartRaceCountdown());
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class UI : MonoBehaviour
     }
 
 
-    private IEnumerator StartCountdown()
+    public IEnumerator StartCountdown()
     {
         Time.timeScale = 0f;
 
@@ -49,6 +49,14 @@ public class UI : MonoBehaviour
         countdown_text.gameObject.SetActive(false);
 
         Time.timeScale = 1f;
+        //StartTimer();
+    }
+
+    private IEnumerator StartRaceCountdown()
+    {
+        // Beginning countdown timer starts AFTER countdown
+        yield return StartCoroutine(StartCountdown());
+
         StartTimer();
     }
 
@@ -65,5 +73,10 @@ public class UI : MonoBehaviour
     public void UpdateCheckPoint(int count)
     {
         checkpoint_reached.text = count.ToString();
+    }
+
+    public void SetTotalCheckPoint(int count)
+    {
+        total_checkpoints.text = "/" + count.ToString();
     }
 }

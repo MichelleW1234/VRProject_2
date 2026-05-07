@@ -8,7 +8,7 @@ public class RayLine : MonoBehaviour
     void Start()
     {
 
-        GM = GameObject.Find("[BuildingBlock] Camera Rig").GetComponent<GameManager>();
+        GM = GameObject.Find("lb_goldFinch").GetComponent<GameManager>();
         line.material = new Material(Shader.Find("Sprites/Default"));
         UpdateRay();
         
