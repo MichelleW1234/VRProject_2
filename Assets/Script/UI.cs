@@ -29,7 +29,7 @@ public class UI : MonoBehaviour
     {
         if (countActive)
         {
-            countdownTime -= Time.unscaledDeltaTime;
+
             countdown_text.text = Mathf.CeilToInt(countdownTime).ToString();
             Debug.Log("Countdown: " + countdownTime);
 
@@ -52,6 +52,12 @@ public class UI : MonoBehaviour
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         timer_text.text = time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00"); //convert timer to UI
     }
+
+
+    //IEnumerator StartCountdown()
+    //{
+
+    //}
 
     public void StartTimer()
     {
