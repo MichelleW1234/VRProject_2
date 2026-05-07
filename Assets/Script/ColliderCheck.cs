@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DroneCollisionForwarder : MonoBehaviour
 {
-    public Drone droneParent;
+    public DroneManager droneParent;
 
     private void OnTriggerEnter(Collider other)
     {

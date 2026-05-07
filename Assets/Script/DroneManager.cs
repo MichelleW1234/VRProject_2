@@ -4,12 +4,12 @@ using UnityEngine.SubsystemsImplementation;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-public class Drone : MonoBehaviour
+public class DroneManager : MonoBehaviour
 {
 
     XRHandSubsystem handSubsystem;
     private float defaultSpeed = 5f;
-    private GameManager GM;
+    public GameManager GM;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,11 +24,13 @@ public class Drone : MonoBehaviour
         }
 
         GM = gameObject.GetComponent<GameManager>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (handSubsystem == null) return; //safety check
 
         XRHand Lefthand = handSubsystem.leftHand;
