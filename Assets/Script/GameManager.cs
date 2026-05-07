@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     
     [SerializeField]
     private UI UIS;
+    [SerializeField]
+    private SoundManager SoundManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,6 +34,8 @@ public class GameManager : MonoBehaviour
         UIS.UpdateCheckPoint(checkpoints_reached);
 
         if (UIS == null) Debug.Log("UI script not assigned");
+
+        SoundManager = GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
@@ -104,6 +108,7 @@ public class GameManager : MonoBehaviour
     {
         IsResetting = true;
         // reset drone here
+        SoundManager.PlayDroneCrashSound();
         if (currentCP != null)
         {
             //sets position to last checkpoint and rotation to the next checkpoint
@@ -114,20 +119,8 @@ public class GameManager : MonoBehaviour
                 - positions[currentCP.checkpointIndex];
             transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
         }
-
+        SoundManager.PlayCountdownSound();
         yield return StartCoroutine(UIS.StartCountdown());
-        /**
-        // pause everything affected by Time.deltaTime / physics
-        Time.timeScale = 0f;
-
-        Debug.Log("Paused for 3 seconds");
-
-        // wait 3 real-world seconds
-        yield return new WaitForSecondsRealtime(3f);
-
-        // resume
-        Time.timeScale = 1f;
-        */
         Debug.Log("Game resumed");
         IsResetting = false;
     }
@@ -144,12 +137,14 @@ public class GameManager : MonoBehaviour
             //if this checkpoint is the valid next checkpoint
             if (CPtoCheck != null && CPtoCheck.checkpointIndex == checkpoints_reached)
             {
+                SoundManager.PlayCheckpointReachedSound();
                 checkpoints_reached++; //increment the checkpoint count
                 currentCP = CPtoCheck; //assign new last checkpoint reached
                 UIS.UpdateCheckPoint(checkpoints_reached);
                 //Final checkpoint reached
                 if (checkpoints_reached == total_checkpoint)
                 {
+                    SoundManager.PlayFinishSound();
                     Debug.Log("Final checkpoint reached");
                     UIS.StopTimer();
                     Time.timeScale = 0f; 

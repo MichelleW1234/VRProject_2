@@ -12,7 +12,9 @@ public class DroneManager : MonoBehaviour
     private float defaultSpeed = 20f;
     public GameManager GM;
     private Rigidbody rb;
-    private bool ShouldMove = false;
+    public bool ShouldMove = false;
+
+    private SoundManager soundManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,6 +31,7 @@ public class DroneManager : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         if (rb == null) Debug.Log("RB NULL");
 
+        soundManager = gameObject.GetComponent<SoundManager>();
     }
 
     private void FixedUpdate()
@@ -196,9 +199,11 @@ public class DroneManager : MonoBehaviour
     {
         if (Time.timeScale > 0f)
         {
+            ShouldMove = true;
             Vector3 newPosition = rb.position + transform.forward * defaultSpeed * Time.fixedDeltaTime;
             rb.MovePosition(newPosition);
         }
+        else ShouldMove = false;
         //transform.position += transform.forward * defaultSpeed * Time.deltaTime;
 
     }

@@ -33,7 +33,7 @@ public class RayLine : MonoBehaviour
             line.SetPosition(0, transform.position);
             line.SetPosition(1, rayDirectionEndpoint);
 
-            Debug.Log("done!"); 
+            //Debug.Log("done!"); 
         }
 
     }
