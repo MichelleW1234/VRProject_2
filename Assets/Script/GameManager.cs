@@ -1,9 +1,7 @@
 using Meta.XR.MRUtilityKit;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-
 
 
 public class GameManager : MonoBehaviour
@@ -16,6 +14,9 @@ public class GameManager : MonoBehaviour
     public int checkpoints_reached = 0;
     private int total_checkpoint;
     public CheckPoint currentCP; //stores the last checkpoint reached 
+    
+    [SerializeField]
+    private UI UIS;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
         SetStartPos(positions);
         total_checkpoint = positions.Count;
         checkpoints_reached = 1;
+
+        if (UIS == null) Debug.Log("UI script not assigned");
     }
 
     // Update is called once per frame
@@ -70,8 +73,6 @@ public class GameManager : MonoBehaviour
                 {
                     currentCP = script;
                 }
-
-
             }
         }
     }
@@ -129,12 +130,22 @@ public class GameManager : MonoBehaviour
         if (other == null) return; //safety
 
         if (other.CompareTag("CP")) {
-            currentCP = other.GetComponent<CheckPoint>(); //updates last checkpoint
+            CheckPoint CPtoCheck = other.GetComponent<CheckPoint>(); //updates last checkpoint
 
             //if this checkpoint is the valid next checkpoint
-            if (currentCP != null && currentCP.checkpointIndex == checkpoints_reached)
+            if (CPtoCheck != null && CPtoCheck.checkpointIndex == checkpoints_reached)
             {
                 checkpoints_reached++; //increment the checkpoint count
+                currentCP = CPtoCheck; //assign new last checkpoint reached
+                UIS.UpdateCheckPoint(checkpoints_reached);
+                //Final checkpoint reached
+                if (checkpoints_reached == total_checkpoint)
+                {
+                    Debug.Log("Final checkpoint reached");
+                    UIS.StopTimer();
+                    Time.timeScale = 0f; 
+                }
+
             }
             else
             {

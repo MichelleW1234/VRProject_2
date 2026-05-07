@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine;
 
 public class UI : MonoBehaviour
 {
 
     [SerializeField]
-    private TMP_Text timer_text, countdown_text;
+    private TMP_Text timer_text, countdown_text, checkpoint_reached;
 
     private bool timerActive; //to see if timer would be runned
     private float currentTime;
@@ -25,7 +24,7 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timerActive) currentTime += Time.deltaTime;
+        if (timerActive) currentTime += Time.unscaledDeltaTime;
 
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         timer_text.text = time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00"); //convert timer to UI
@@ -61,5 +60,10 @@ public class UI : MonoBehaviour
     public void StopTimer()
     {
         timerActive = false;
+    }
+
+    public void UpdateCheckPoint(int count)
+    {
+        checkpoint_reached.text = count.ToString();
     }
 }
