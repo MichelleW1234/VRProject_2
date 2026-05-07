@@ -4,13 +4,12 @@ using UnityEngine.SubsystemsImplementation;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-public class Drone : MonoBehaviour
+public class DroneManager : MonoBehaviour
 {
 
     XRHandSubsystem handSubsystem;
     private float defaultSpeed = 5f;
-    private GameManager GM;
-    public LineRenderer line;
+    public GameManager GM;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,16 +25,11 @@ public class Drone : MonoBehaviour
 
         GM = gameObject.GetComponent<GameManager>();
 
-        line.material = new Material(Shader.Find("Sprites/Default"));
-        UpdateRay();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        UpdateRay();
 
         if (handSubsystem == null) return; //safety check
 
@@ -189,21 +183,6 @@ public class Drone : MonoBehaviour
 
     }
 
-    private void UpdateRay()
-    {
-        Vector3 rayDirectionEndpoint = GM.positions[GM.checkpoints_reached];
-        Ray ray = new Ray(transform.position, (rayDirectionEndpoint - transform.position).normalized);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-
-            line.SetPosition(0, transform.position);
-            line.SetPosition(1, rayDirectionEndpoint);
-
-            Debug.Log("done!"); 
-        }
-
-    }
 
     private void MoveDrone()
     {
