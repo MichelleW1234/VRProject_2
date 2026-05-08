@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     
     [SerializeField]
     private UI UIS;
+    [SerializeField]
+    private SoundManager SM;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -102,6 +104,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ResetDroneRoutine()
     {
+        SM.PlayDroneCrashSound();
         IsResetting = true;
         // reset drone here
         if (currentCP != null)
@@ -114,7 +117,7 @@ public class GameManager : MonoBehaviour
                 - positions[currentCP.checkpointIndex];
             transform.rotation = Quaternion.LookRotation(directionToNext.normalized, Vector3.up);
         }
-
+        SM.PlayCountdownSound();
         yield return StartCoroutine(UIS.StartCountdown());
         /**
         // pause everything affected by Time.deltaTime / physics
@@ -144,12 +147,14 @@ public class GameManager : MonoBehaviour
             //if this checkpoint is the valid next checkpoint
             if (CPtoCheck != null && CPtoCheck.checkpointIndex == checkpoints_reached)
             {
+                SM.PlayCheckpointReachedSound();
                 checkpoints_reached++; //increment the checkpoint count
                 currentCP = CPtoCheck; //assign new last checkpoint reached
                 UIS.UpdateCheckPoint(checkpoints_reached);
                 //Final checkpoint reached
                 if (checkpoints_reached == total_checkpoint)
                 {
+                    SM.PlayFinishSound();
                     Debug.Log("Final checkpoint reached");
                     UIS.StopTimer();
                     Time.timeScale = 0f; 
