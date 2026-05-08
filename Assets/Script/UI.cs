@@ -19,6 +19,7 @@ public class UI : MonoBehaviour
         currentTime = 0f;
         timerActive = false;
         StartCoroutine(StartRaceCountdown());
+        //SM.PlayCountdownSound();
     }
 
     // Update is called once per frame
@@ -33,6 +34,7 @@ public class UI : MonoBehaviour
 
     public IEnumerator StartCountdown()
     {
+        //SM.PlayCountdownSound();
         Time.timeScale = 0f;
 
         countdown_text.gameObject.SetActive(true);
