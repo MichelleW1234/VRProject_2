@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.XR.CoreUtils;
 
 public class DistanceIndicator : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class DistanceIndicator : MonoBehaviour
     void Start()
     {
         textMesh = GetComponent<TextMeshPro>();
-
+        if (textMesh != null) Debug.Log("text assigned");
         UpdateDistance();
     }
 
@@ -22,14 +23,22 @@ public class DistanceIndicator : MonoBehaviour
 
     private void UpdateDistance()
     {
-        
+        /**
         Transform head = Camera.main.transform;
 
-        GameObject drone = GameObject.Find("[BuildingBlock] Camera Rig");
-        GameManager GM = drone.GetComponent<GameManager>();
+        if (head == null)
+        {
+            Debug.LogError("No camera tagged MainCamera found!");
+            return;
+        }*/
 
-        Vector3 droneHeadCoordPosition = head.InverseTransformPoint(drone.transform.position);
-        Vector3 checkPointHeadCoordPosition = head.InverseTransformPoint(GM.positions[GM.checkpoints_reached]);
+
+        GameObject drone = GameObject.Find("UFO");
+        GameManager GM = drone.GetComponent<GameManager>();
+        GameObject head = GameObject.Find("[BuildingBlock] Camera Rig");
+        Transform headCoord = head.transform;
+        Vector3 droneHeadCoordPosition = headCoord.InverseTransformPoint(drone.transform.position); //UFO
+        Vector3 checkPointHeadCoordPosition = headCoord.InverseTransformPoint(GM.positions[GM.checkpoints_reached]); //checkpoint
 
         float distance = Vector3.Distance(droneHeadCoordPosition, checkPointHeadCoordPosition);
 
