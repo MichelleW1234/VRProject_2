@@ -8,7 +8,7 @@ public class RayLine : MonoBehaviour
     void Start()
     {
 
-        GM = GameObject.Find("lb_goldFinch").GetComponent<GameManager>();
+        GM = GameObject.Find("UFO").GetComponent<GameManager>();
         line.material = new Material(Shader.Find("Sprites/Default"));
         UpdateRay();
         
@@ -33,7 +33,6 @@ public class RayLine : MonoBehaviour
             line.SetPosition(0, transform.position);
             line.SetPosition(1, rayDirectionEndpoint);
 
-            Debug.Log("done!"); 
         }
 
     }
